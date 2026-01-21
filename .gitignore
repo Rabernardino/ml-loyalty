@@ -1,0 +1,19 @@
+# env
+.env
+kaggle.json
+.venv
+
+# data
+*.csv
+*.db
+
+# cache e artefatos
+mlartifacts
+mlruns
+__pycache__
+
+# images
+/img
+
+# OS cruft
+.DS_Store
