@@ -5,6 +5,8 @@
 import pandas as pd
 import sqlalchemy
 from datetime import datetime, timedelta
+from tqdm import tqdm
+
 
 # %%
 def import_query(path):
@@ -17,10 +19,10 @@ def data_ranges(start, stop, monthly=False):
     
     dates = []
     while start <= stop:
-
+        dates.append(start)
         dt_start = (datetime.strptime(start, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
         start = dt_start
-        dates.append(start)
+        
 
     if monthly:
         return [i for i in dates if i.endswith('01')]
@@ -29,39 +31,19 @@ def data_ranges(start, stop, monthly=False):
     return dates
 
 # %%
-query = import_query('./life_cycle.sql')
-
-
-# %%
 engine_transacional = sqlalchemy.create_engine("sqlite:///../../data/loyalty-system/database.db")
 engine_analytical = sqlalchemy.create_engine("sqlite:///../../data/analytical/database.db")
 
 
 # %%
-datas = [
-    '2024-03-01',
-    '2024-04-01',
-    '2024-05-01',
-    '2024-06-01',
-    '2024-07-01',
-    '2024-08-01',
-    '2024-09-01',
-    '2024-10-01',
-    '2024-11-01',
-    '2024-12-01',
-    '2025-01-01',
-    '2025-02-01',
-    '2025-03-01',
-    '2025-04-01',
-    '2025-05-01',
-    '2025-06-01',
-    '2025-07-01',
-    '2025-08-01',
-    '2025-09-01'
-]
+query = import_query('./life_cycle.sql')
+
 
 # %%
-for i in datas:
+datas = data_ranges('2024-09-01','2025-10-01')
+
+# %%
+for i in tqdm(datas):
 
     with engine_analytical.connect() as conn_analytical:
   
