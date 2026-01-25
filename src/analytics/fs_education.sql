@@ -8,7 +8,7 @@ WITH tb_usuario_curso AS (
     FROM
         cursos_episodios_completos
     WHERE
-        DtCriacao < '2025-09-01'
+        DtCriacao < '2025-10-01'
     GROUP BY
         idUsuario,
         descSlugCurso
@@ -89,7 +89,7 @@ tb_atividades AS (
     FROM
         recompensas_usuarios
     WHERE
-        dtRecompensa < '2025-09-01'
+        dtRecompensa < '2025-10-01'
     GROUP BY
         idUsuario
 
@@ -101,7 +101,7 @@ tb_atividades AS (
     FROM
         habilidades_usuarios
     WHERE
-        dtCriacao < '2025-09-01'
+        dtCriacao < '2025-10-01'
     GROUP BY
         idUsuario
         
@@ -113,7 +113,7 @@ tb_atividades AS (
     FROM
         cursos_episodios_completos
     WHERE
-        dtCriacao < '2025-09-01'
+        dtCriacao < '2025-10-01'
     GROUP BY
         idUsuario
 ),
