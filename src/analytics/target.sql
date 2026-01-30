@@ -1,6 +1,6 @@
 
 
--- DROP TABLE IF EXISTS abt_fiel;
+--DROP TABLE IF EXISTS abt_fiel;
 
 CREATE TABLE IF NOT EXISTS abt_fiel AS 
 
@@ -112,7 +112,7 @@ SELECT
     t3.pctReborn, 
     t3.avgFreqGrupo, 
     t3.ratioFreqGrupo,
-    t4.qtedCursosCompletos TEXT, 
+    t4.qtedCursosCompletos, 
     t4.qtedCursosIncompletos, 
     t4.carreira, 
     t4.coletaDados2024, 
@@ -159,3 +159,4 @@ LEFT JOIN
 ON t1.idCliente = t4.IdCliente
     AND t1.dtRef = t4.dtRef
 
+WHERE t3.dtRef IS NOT NULL
