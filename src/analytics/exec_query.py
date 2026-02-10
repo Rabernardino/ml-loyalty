@@ -32,7 +32,7 @@ def data_ranges(start, stop, monthly=False):
     return dates
 
 
-def exec_query(table, db_origin, db_target, dt_start, dt_stop, monthly):
+def exec_query(table, db_origin, db_target, dt_start, dt_stop, monthly, mode='append'):
 
     engine_transacional = sqlalchemy.create_engine(f"sqlite:///../../data/{db_origin}/database.db")
     engine_analytical = sqlalchemy.create_engine(f"sqlite:///../../data/{db_target}/database.db")
@@ -54,7 +54,7 @@ def exec_query(table, db_origin, db_target, dt_start, dt_stop, monthly):
         query_import = query.format(date=i)
 
         df = pd.read_sql(query_import, engine_transacional)
-        df.to_sql(table, engine_analytical, index=False, if_exists='append')
+        df.to_sql(table, engine_analytical, index=False, if_exists=mode)
 
 
 # %%
@@ -70,9 +70,9 @@ def main():
     parser.add_argument('--start', type=str, default=now)
     parser.add_argument('--stop', type=str, default=now)
     parser.add_argument('--monthly', action='store_true')
-
-
+    parser.add_argument("--mode", choices=['append', 'replace'])
     args = parser.parse_args()
+
 
     exec_query(args.table, args.db_origin, args.db_target, args.start, args.stop, args.monthly)
 

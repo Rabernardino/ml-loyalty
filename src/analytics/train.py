@@ -132,12 +132,35 @@ onehot = encoding.OneHotEncoder(variables=['descLifeCycleAtual','descLifeCycleD2
 #     min_samples_leaf=50
 # )
 
-model = ensemble.RandomForestClassifier(
-    random_state=42,
-    n_estimators=150,
-    n_jobs=1,
-    min_samples_leaf=50
-    )
+# model = ensemble.RandomForestClassifier(
+#     random_state=42,
+#     n_estimators=150,
+#     n_jobs=1,
+#     min_samples_leaf=50
+#     )
+
+model = ensemble.AdaBoostClassifier(
+    random_state=42
+)
+
+
+params = {
+        'n_estimators':[100,200,300,400,500,1000],
+        'learning_rate':[0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 0.9, 0.99]
+        # 'min_samples_leaf':[10,20,30,50,75,100]
+
+    }
+
+
+grid = model_selection.GridSearchCV(
+    estimator=model,
+    param_grid=params,
+    cv=3,
+    scoring='roc_auc',
+    refit=True,
+    verbose=3,
+    n_jobs=-1
+)
 
 
 model_pipeline = pipeline.Pipeline(steps=[
@@ -146,11 +169,9 @@ model_pipeline = pipeline.Pipeline(steps=[
         ("Imputacao de Nao-Usuario", input_new),
         ("Imputacao de 1000", input_1000),
         ("OneHot Encoding", onehot),
-        ("Algoritmo", model),
+        ("Algoritmo", grid),
     ])
 
-# %%
-model_pipeline
 
 # %%
 with mlflow.start_run() as r:
@@ -230,12 +251,3 @@ with mlflow.start_run() as r:
     
     mlflow.log_artifact('curva_roc.png')
 
-
-# %%
-features_name = model_pipeline[:-1].transform(X_train.head(1)).columns
-
-features_importance = pd.Series(model_pipeline[-1].feature_importances_, index=features_name)
-features_importance.sort_values(ascending=False)
-
-
-# %%
